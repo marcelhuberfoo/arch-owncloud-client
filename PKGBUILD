@@ -15,20 +15,20 @@ _buildtype='Release'
 
 _name=mirall
 pkgname=owncloud-client
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 pkgdesc='ownCloud client based on mirall'
 arch=('i686' 'x86_64' 'armv7h')
 url='http://owncloud.org/'
 license=('GPL2')
-depends=('ocsync' 'qtkeychain' 'qtwebkit')
-makedepends=('cmake')
+depends=('qtkeychain' 'qtwebkit' 'neon')
+makedepends=('cmake' 'pkgconfig')
 provides=('mirall' 'owncloud-client')
 conflicts=('mirall-git')
 install=owncloud-client.install
 backup=('etc/ownCloud/sync-exclude.lst')
 source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2")
-md5sums=('b5298faab4ff22a3840afe7d2968e4c2')
+md5sums=('bedc635c26b7f84f4a6118b930cf6607')
 
 if [[ ! ${_buildtype} == 'Release' ]] && [[ ! ${_buildtype} == 'release' ]]; then
   options=(!strip)
@@ -43,12 +43,11 @@ build() {
   cd ${srcdir}/${_name}-${pkgver}-build
 
   cmake -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-        -DCMAKE_BUILD_TYPE=${_buildtype} \
-        -DCSYNC_INCLUDE_PATH=/usr/include/ocsync \
-        -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
-        ../${_name}-${pkgver}
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DCMAKE_BUILD_TYPE=${_buildtype} \
+    -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
+    ../${_name}-${pkgver}
   make
 }
 
@@ -56,3 +55,5 @@ package() {
   cd ${srcdir}/${_name}-${pkgver}-build
   make DESTDIR=${pkgdir} install
 }
+
+# vim: set ts=2 sw=2 et:
